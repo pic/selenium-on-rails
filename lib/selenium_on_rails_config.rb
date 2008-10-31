@@ -20,7 +20,7 @@ class SeleniumOnRailsConfig
     @configs = {}
     files = [File.expand_path(File.dirname(__FILE__) + '/../config.yml')]
     files << File.join(RAILS_ROOT, 'config', 'selenium.yml')
-    files.each { |file| @configs = YAML.load_file(file) if File.exist?(file) }
+    files.each { |file| @configs = YAML.load(ERB.new(IO.read(file)).result) if File.exist?(file) }
   end
 
 end
