@@ -13,8 +13,12 @@ class SeleniumOnRailsConfig
   private
     def self.configs
       unless defined? @@configs
-        file = File.expand_path(File.dirname(__FILE__) + '/../config.yml')
-        @@configs = File.exist?(file) ? YAML.load_file(file) : {}
+        files = [File.expand_path(File.dirname(__FILE__) + '/../config.yml')]
+        files << File.join(RAILS_ROOT, 'config', 'selenium.yml')
+        files.each do |file|
+          @@configs = YAML.load(ERB.new(IO.read(file)).result) if File.exist?(file)
+        end
+        @@configs ||= {}
       end
       @@configs
     end
