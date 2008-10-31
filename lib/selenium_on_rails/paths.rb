@@ -25,6 +25,7 @@ module SeleniumOnRails
     end
     
     def fixtures_path
+      return @config.get("fixtures_path") if @config.get("fixtures_path")
       File.expand_path File.join(RAILS_ROOT, 'test/fixtures')
     end
     
