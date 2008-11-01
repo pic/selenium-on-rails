@@ -26,7 +26,9 @@ module SeleniumOnRails
   
     def link_to_test_case suite_name, filename
       name = suite_name + test_case_name(filename)
-      link_to name, :action => :test_file, :testname => path_to_relative_url(filename).sub(/^\//,'')
+      l = link_to name, :action => :test_file, :testname => path_to_relative_url(filename).sub(/^\//,'')
+      # monkey patch, %2F doesn't work when we have apache in front of mongrel
+      l.gsub /%2F/, '/'
     end
   
     private ###############################################

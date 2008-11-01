@@ -5,7 +5,12 @@ function openSuite(selector) {
 	var suite = selector.options[selector.selectedIndex].value;
 	if(suite == "header") return;
 	if(top.location.href != location.href) //inside a frame
-		top.location =  "<%= url_for :action => :support_file %>/TestRunner.html?test=tests" + suite
+	{
+		
+	  var multiW = -1 != top.location.search.indexOf('multiWindow=true') ? "multiWindow=true&" : "";
+		top.location =  "<%= url_for :action => :support_file %>/TestRunner.html?" + multiW + 
+		  "test=tests" + suite
+	}
 	else
 		window.location = "<%= url_for :action => :test_file, :testname => '' %>" + suite
 }

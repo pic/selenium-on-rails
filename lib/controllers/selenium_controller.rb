@@ -20,7 +20,14 @@ class SeleniumController < ActionController::Base
 
   def test_file
     params[:testname] = '' if params[:testname].to_s == 'TestSuite.html'
-    filename = File.join selenium_tests_path, params[:testname]
+    
+    # take care of security
+    filename = File.expand_path(File.join selenium_tests_path, params[:testname])
+    if 0 != filename.index(File.expand_path(selenium_tests_path))
+      render :text => 'Forbidden', :status => 403
+      return
+    end
+      
     if File.directory? filename
       @suite_path = filename
       render :file => view_path('test_suite.rhtml'), :layout => layout_path
@@ -41,7 +48,12 @@ class SeleniumController < ActionController::Base
       return
     end
 
-    filename = File.join selenium_path, params[:filename]
+    filename = File.expand_path(File.join selenium_path, params[:filename])
+    if 0 != filename.index(File.expand_path(selenium_path))
+      render :text => 'Forbidden', :status => 403
+      return
+    end
+
     if File.file? filename
       type = WEBrick::HTTPUtils::DefaultMimeTypes[$1.downcase] if filename =~ /\.(\w+)$/
       type ||= 'text/html'
